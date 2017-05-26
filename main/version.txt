@@ -1,0 +1,60 @@
+v0.0.3
+WORKING:
+CHANGED:
+	Animation in SmartThermostat Page
+PENDING:
+	Button, LED - Use static variable to save register value
+	Button, LED - add init function to Get and Set the default static register value
+	Update Page_Normal to parent class. menu page as child class
+	Add LED Class
+	Replace TouchController class by Button class
+BUG:
+	[Reason Unknown]Button and slider react delay
+	Standby page - Time update after switch to HelloWorld page
+	ButtonSen - Prox Threshold vale freeze
+
+v0.0.2
+WORKING:
+CHANGED:
+	New Standby Page
+PENDING:
+	Button, LED - Use static variable to save register value
+	Button, LED - add init function to Get and Set the default static register value
+	Update Page_Normal to parent class. menu page as child class
+	Add LED Class
+	Replace TouchController class by Button class
+BUG:
+	[Reason Unknown]Button and slider react delay
+	Standby page - Time update after switch to HelloWorld page
+	ButtonSen - Prox Threshold vale freeze
+
+v0.0.1
+WORKING:
+CHANGED:
+	Added Delta Count, Threshold, Data Sensitivity and Prox Sensitivity to Button
+PENDING:
+	Button, LED - Use static variable to save register value
+	Button, LED - add init function to Get and Set the default static register value
+	Update Page_Normal to parent class. menu page as child class
+	Add LED Class
+	Replace TouchController class by Button class
+BUG:
+	[Reason Unknown]Button and slider react delay
+
+v0.0.0
+WORKING:
+	Adding Page to set CS threshold
+CHANGED:
+PENDING:
+	Update Page_Normal to parent class. menu page as child class
+	Add LED Class
+	Replace TouchController class by Button class
+BUG:
+	[Reason Unknown]Button and slider react delay
+
+
+External Libraries:
+	- TimeLib https://github.com/PaulStoffregen/Time
+	- ArduinoJson 		v5.8.2
+	- Adafruit GFX 		v1.1.5
+	- Adafruit ILI9341 	v1.0.2
