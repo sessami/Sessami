@@ -9,6 +9,10 @@
 #include "CAP1114_Button.h"
 #include "CAP1114_LED.h"
 
+void SessamiController::Interrupt() {
+  interrupt = true;
+}
+
 void SessamiController::Background() {
   ui[state]->EvLoop();
   if (second() != _time.Second) {
@@ -16,11 +20,14 @@ void SessamiController::Background() {
     _time.Second = second();
     //Update per second
     button->HeldCount();
+    button->HoldCount();
     ui[state]->EvSec();
     if (minute() != _time.Minute) {
       min_counter++;
       _time.Minute = minute();
       //Update per minute
+      temp_sensor.UpdateRH();
+      temp_sensor.UpdateTp();
       ui[state]->EvMin();
       if (hour() != _time.Hour) {
         hr_counter++;
@@ -41,8 +48,6 @@ void SessamiController::Normal() {
         led->SetDutyCycle(B1111, B110);
         state = 1;
         ui_rst = true;
-
-        ui[2]->UIStateMachine(ui_rst);
       }
       break;
     case 1 : 
@@ -50,8 +55,6 @@ void SessamiController::Normal() {
         led->SetDutyCycle(B1111, B000);
         state = 0;
         ui_rst = true;
-
-        ui[2]->UIStateMachine(ui_rst);
       }
       break;
   }
@@ -76,7 +79,10 @@ void SessamiController::Mode() {
     ENGG();
     
   ui_rst = false;
-  tc->Update();
+  if (interrupt) {
+    tc->Update();
+    interrupt = false;
+  }
 }
 
 void SessamiController::ENGG() {

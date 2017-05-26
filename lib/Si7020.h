@@ -13,7 +13,8 @@
 
 class Si7020 : private I2CSensor {
 private:
-	
+	static float humidity;
+	static float temperature;
 public:
 	Si7020();
 	~Si7020();
@@ -21,6 +22,9 @@ public:
   bool initWireI2C();
   uint8_t ReadUserReg1();
   uint8_t ReadHCReg();
+	void UpdateRH();
+	void UpdateTp();
+	
 	float GetRH();
 	float GetTp();
 };

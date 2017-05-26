@@ -25,6 +25,8 @@ bool Sessami_Button::operator==(const unsigned int key) const {
   if (key < 256) {
     if ( (((unsigned int)button_state & key) > 0) && (button_tap == 1) )
       return true;
+    else if ( (((unsigned int)button_state & key) > 0) && (button_tap > 1) && (button_hold_t > 2) )
+      return true;
   } else {
     if ( (unsigned int)slide_state & ( key - 256 ) > 0)
       return true;
@@ -35,9 +37,10 @@ bool Sessami_Button::operator==(const unsigned int key) const {
 
 void Sessami_Button::UpdateBut() {
   uint16_t cs = 0;
+  uint8_t ss = 0, ssB01 = 0, ssB56 = 0, ssB23 = 0;
 
   UpdateSlide();
-  slide_state = GetSlide();
+  ss = GetSlide();
 
   UpdateCS();
   cs = GetCS();
@@ -45,14 +48,30 @@ void Sessami_Button::UpdateBut() {
   button_state = (uint8_t)(cs & B00111111);
   button_state |= (uint8_t)((cs >> 2) & B01000000);
 
+  if (ss > 0) {
+    Serial.print("ss ");
+    Serial.println(ss, 2);
+  }
+
+  ssB01 = (ss & B00000011);
+  ssB23 = ( (uint8_t)(cs & B11000000) ) >> 4;
+  ssB56 = (ss & B01100000);
+  slide_state = ssB01 + ssB23 + ssB56;
+
+  if (slide_state > 0) {
+    Serial.print("slide_state ");
+    Serial.println(slide_state, 2);
+  }
+
   if (button_state > 1)
     button_tap++;
   else
     button_tap = 0;
 
-
   if ((button_state != 0) || (slide_state != 0))
     held_t = 0;
+  if (button_state < 2)
+    button_hold_t = 0;
 }
 
 uint8_t Sessami_Button::GetBut() {
@@ -69,6 +88,10 @@ unsigned long Sessami_Button::GetHeldT() {
 
 void Sessami_Button::HeldCount() {
   held_t++;
+}
+
+void Sessami_Button::HoldCount() {
+  button_hold_t++;
 }
 
 bool Sessami_Button::BuTap() {
@@ -98,26 +121,26 @@ uint8_t Sessami_Button::GetButSen() {
 
 //TODO
 int8_t Sessami_Button::GetDeltaCount(uint8_t key) {
-  switch(key) {
-    case B_PROX : 
+  switch (key) {
+    case B_PROX :
       return delta_count[0] = GetSDelta(SDelta_CS1);
       break;
-    case B_UP : 
+    case B_UP :
       return delta_count[1] = GetSDelta(SDelta_CS2);
       break;
-    case B_DOWN : 
+    case B_DOWN :
       return delta_count[2] = GetSDelta(SDelta_CS3);
       break;
-    case B_POWER : 
+    case B_POWER :
       return delta_count[3] = GetSDelta(SDelta_CS4);
       break;
-    case B_RIGHT : 
+    case B_RIGHT :
       return delta_count[4] = GetSDelta(SDelta_CS5);
       break;
-    case B_MID : 
+    case B_MID :
       return delta_count[5] = GetSDelta(SDelta_CS6);
       break;
-    case B_LEFT : 
+    case B_LEFT :
       return delta_count[6] = GetSDelta(SDelta_CS7);
       break;
   }
@@ -125,26 +148,26 @@ int8_t Sessami_Button::GetDeltaCount(uint8_t key) {
 
 //TODO
 uint8_t Sessami_Button::GetTh(uint8_t key) {
-  switch(key) {
-    case B_PROX : 
+  switch (key) {
+    case B_PROX :
       return threshold[0] = GetThresh(Thresh_CS1);
       break;
-    case B_UP : 
+    case B_UP :
       return threshold[1] = GetThresh(Thresh_CS2);
       break;
-    case B_DOWN : 
+    case B_DOWN :
       return threshold[2] = GetThresh(Thresh_CS3);
       break;
-    case B_POWER : 
+    case B_POWER :
       return threshold[3] = GetThresh(Thresh_CS4);
       break;
-    case B_RIGHT : 
+    case B_RIGHT :
       return threshold[4] = GetThresh(Thresh_CS5);
       break;
-    case B_MID : 
+    case B_MID :
       return threshold[5] = GetThresh(Thresh_CS6);
       break;
-    case B_LEFT : 
+    case B_LEFT :
       return threshold[6] = GetThresh(Thresh_CS7);
       break;
   }
@@ -152,32 +175,32 @@ uint8_t Sessami_Button::GetTh(uint8_t key) {
 
 //TODO
 uint8_t Sessami_Button::SetTh(uint8_t key, uint8_t value) {
-  switch(key) {
-    case B_PROX : 
+  switch (key) {
+    case B_PROX :
       SetThresh(Thresh_CS1, value);
       threshold[0] = value;
       break;
-    case B_UP : 
+    case B_UP :
       SetThresh(Thresh_CS2, value);
       threshold[1] = value;
       break;
-    case B_DOWN : 
+    case B_DOWN :
       SetThresh(Thresh_CS3, value);
       threshold[2] = value;
       break;
-    case B_POWER : 
+    case B_POWER :
       SetThresh(Thresh_CS4, value);
       threshold[3] = value;
       break;
-    case B_RIGHT : 
+    case B_RIGHT :
       SetThresh(Thresh_CS5, value);
       threshold[4] = value;
       break;
-    case B_MID : 
+    case B_MID :
       SetThresh(Thresh_CS6, value);
       threshold[5] = value;
       break;
-    case B_LEFT : 
+    case B_LEFT :
       SetThresh(Thresh_CS7, value);
       threshold[6] = value;
       break;
@@ -185,26 +208,26 @@ uint8_t Sessami_Button::SetTh(uint8_t key, uint8_t value) {
 }
 
 uint8_t Sessami_Button::Getthreshold(uint8_t key) {
-  switch(key) {
-    case B_PROX : 
+  switch (key) {
+    case B_PROX :
       return threshold[0];
       break;
-    case B_UP : 
+    case B_UP :
       return threshold[1];
       break;
-    case B_DOWN : 
+    case B_DOWN :
       return threshold[2];
       break;
-    case B_POWER : 
+    case B_POWER :
       return threshold[3];
       break;
-    case B_RIGHT : 
+    case B_RIGHT :
       return threshold[4];
       break;
-    case B_MID : 
+    case B_MID :
       return threshold[5];
       break;
-    case B_LEFT : 
+    case B_LEFT :
       return threshold[6];
       break;
   }

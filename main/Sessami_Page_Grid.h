@@ -31,14 +31,14 @@ uint8_t Page_Grid::UIStateMachine(bool rst) {
 
 //Draw grid
 uint8_t Page_Grid::C0(unsigned int color) {
-  for (int i=0; i<240; i+=10) {
-    tft.drawFastHLine(0, i, 320, color); //Horizontal
+  for (int i=0; i<SCREENHEIGHT; i+=10) {
+    tft.drawFastHLine(0, i, SCREENWIDTH, color); //Horizontal
   }
   
-  for (int i=0; i<320; i+=10) {
-    tft.drawFastVLine(i, 0, 240, color); //Vertical
+  for (int i=0; i<SCREENWIDTH; i+=10) {
+    tft.drawFastVLine(i, 0, SCREENHEIGHT, color); //Vertical
   }
 
-   tft.drawFastHLine(0, 120, 320,  ILI9341_RED); //Horizontal mid
-   tft.drawFastVLine(160, 0, 240,  ILI9341_RED); //Vertical mid
+   tft.drawFastHLine(0, 120, SCREENWIDTH,  ILI9341_RED); //Horizontal mid
+   tft.drawFastVLine(160, 0, SCREENHEIGHT,  ILI9341_RED); //Vertical mid
 }

@@ -16,6 +16,7 @@ SessamiController *c;
 void Toggle() {
   rp_int = micros() - int_t;
   int_t = micros();
+  c->Interrupt();
 }
 
 void setup() {

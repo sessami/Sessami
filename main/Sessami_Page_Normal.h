@@ -12,24 +12,36 @@
 class Page_Normal : private SessamiUI {
   private:
     OpenWeather_ESP8266 openweather;
+    Thermostat thermostat;
+    Si7020 temp_sensor;
 
     unsigned long loop_t;
     unsigned long last_t;
-    int sub_state;
+    int8_t sub_state;
     bool show_sub;
-    Coordinates co[6];
+    Coordinates co[4];
 
-    void Main();
-    void Sub();
+    /* number update */
+    float intemp;
+    float last_intemp;
+    float outtemp;
+    float last_outtemp;
+
+    void Main(bool rst);
+    void Sub(bool rst);
 
     uint8_t LoopTime(unsigned int color);
     uint8_t PageTitle(unsigned int color);
     uint8_t Date(unsigned int color);
     uint8_t Time(unsigned int color);
+
+    uint8_t IndoorTemp(unsigned int color);
+    uint8_t OutdoorTemp(unsigned int color);
+    uint8_t ThermostatSetPt(unsigned int color);
+
     uint8_t C0(unsigned int color);
     uint8_t C1(unsigned int color);
     uint8_t C2(unsigned int color);
-    uint8_t C3(unsigned int color);
 
   public:
     virtual uint8_t EvMin();
@@ -41,10 +53,10 @@ class Page_Normal : private SessamiUI {
 };
 
 Page_Normal::Page_Normal() :  sub_state(0), show_sub(true), loop_t(0), last_t(0) {
-  co[0].x = 160; co[0].y = 140;
-  co[1].x = 45; co[1].y = 140;
-  co[2].x = 50; co[2].y = 55;
-  co[3].x = 222; co[3].y = 165;
+  co[0].x = 247; co[0].y = 70;
+  co[1].x = 25; co[1].y = 100;
+  co[2].x = 50; co[2].y = 110;
+  co[3].x = 140; co[3].y = 135;
 }
 
 Page_Normal::~Page_Normal() {
@@ -61,28 +73,56 @@ uint8_t Page_Normal::EvHr() {
 
 uint8_t Page_Normal::UIStateMachine(bool rst) {
   if (rst) {
+    last_intemp = intemp = temp_sensor.GetTp();
+    last_outtemp = outtemp = openweather.GetTemp();
+    
     //image_draw->ClearLCD();
+    tft.fillRect(0, 15, SCREENWIDTH, SCREENHEIGHT - 15, ILI9341_BLACK);
     PageTitle(ILI9341_WHITE);
     Date(ILI9341_WHITE);
     Time(ILI9341_WHITE);
-    C0(ILI9341_WHITE);
-    C1(ILI9341_WHITE);
-    //C2(ILI9341_WHITE);
-    C3(ILI9341_WHITE);
     //state = 0;
   }
   LoopTime(ILI9341_WHITE);
 
-  Main();
+  Main(rst);
   if (show_sub)
-    Sub();
+    Sub(rst);
 
   return 0;
 }
 
-void Page_Normal::Main() {
+void Page_Normal::Main(bool rst) {
   switch (state) {
     case 0 :
+      //Use Standby
+      if (rst) {
+        IndoorTemp(ILI9341_WHITE);
+        OutdoorTemp(ILI9341_WHITE);
+        ThermostatSetPt(ILI9341_WHITE);
+      }
+      
+      intemp = temp_sensor.GetTp();
+      outtemp = openweather.GetTemp();
+      if (intemp != last_intemp) {
+        IndoorTemp(ILI9341_BLACK);
+        last_intemp = intemp;
+        IndoorTemp(ILI9341_WHITE);
+      }
+      if (outtemp != last_outtemp) {
+        OutdoorTemp(ILI9341_BLACK);
+        last_outtemp = outtemp;
+        OutdoorTemp(ILI9341_WHITE);
+      }
+      if (*button == B_UP) {
+        ThermostatSetPt(ILI9341_BLACK);
+        thermostat++;
+        ThermostatSetPt(ILI9341_WHITE);
+      } else if (*button == B_DOWN) {
+        ThermostatSetPt(ILI9341_BLACK);
+        thermostat--;
+        ThermostatSetPt(ILI9341_WHITE);
+      }
       break;
     case 1 :
       break;
@@ -91,19 +131,46 @@ void Page_Normal::Main() {
   }
 }
 
-void Page_Normal::Sub() {
+void Page_Normal::Sub(bool rst) {
+  if (*button == S_RIGHT) {
+    sub_state++;
+    if (sub_state > 2)
+      sub_state = 0;
+    rst = true;
+  } else if (*button == S_LEFT) {
+    sub_state--;
+    if (sub_state < 0)
+      sub_state = 2;
+    rst = true;
+  }
   switch (sub_state) {
     case 0 :
+      //print icon
+      if (rst) {
+        C0(ILI9341_WHITE);
+        C1(ILI9341_BLACK);
+        C2(ILI9341_BLACK);
+      }
       break;
     case 1 :
+      if (rst) {
+        C0(ILI9341_WHITE);
+        C1(ILI9341_WHITE);
+        C2(ILI9341_BLACK);
+      }
       break;
     case 2 :
+      if (rst) {
+        C0(ILI9341_WHITE);
+        C1(ILI9341_WHITE);
+        C2(ILI9341_WHITE);
+      }
       break;
   }
 
-  if (*button == B_MID) {
+  /*if (*button == S_TAP) {
     state = sub_state;
-  }
+  }*/
 }
 
 uint8_t Page_Normal::PageTitle(unsigned int color) {
@@ -167,47 +234,58 @@ uint8_t Page_Normal::Date(unsigned int color) {
   return 0;
 }
 
-/****************************************************************
-                                 Standby Screen
-*/
 uint8_t Page_Normal::C0(unsigned int color) {
-  tft.setTextColor(color);
-
-  tft.setCursor(co[0].x, co[0].y);
-  tft.setFont(&LiberationSans_Regular28pt7b);
-  tft.print("25.5");
-  tft.setFont(&LiberationSans_Regular4pt7b);
-  tft.print(" o");
-
-  return 0;
+  tft.drawCircle(50, 211, 25, color);
+  tft.drawCircle(160, 211, 25, color);
+  tft.drawCircle(270, 211, 25, color);
 }
 
 uint8_t Page_Normal::C1(unsigned int color) {
+  tft.drawCircle(50, 211, 17, color);
+  tft.drawCircle(160, 211, 17, color);
+  tft.drawCircle(270, 211, 17, color);
+}
+
+uint8_t Page_Normal::C2(unsigned int color) {
+  tft.drawCircle(50, 211, 9, color);
+  tft.drawCircle(160, 211, 9, color);
+  tft.drawCircle(270, 211, 9, color);
+}
+
+/*******************************************************************
+                            Standby Screen
+*/
+
+uint8_t Page_Normal::IndoorTemp(unsigned int color) {
   tft.setTextColor(color);
 
-  tft.setCursor(co[1].x, co[1].y);
-  tft.setFont(&LiberationSans_Regular18pt7b);
-  tft.print(openweather.GetTemp(), 1);
+  tft.setCursor(co[0].x, co[0].y);
+  tft.setFont(&LiberationSans_Regular12pt7b);
+  tft.print(last_intemp, 1);
   tft.setFont(&LiberationSans_Regular4pt7b);
   tft.print(" o");
 
   return 0;
 }
 
-uint8_t Page_Normal::C2(unsigned int color) {
+uint8_t Page_Normal::OutdoorTemp(unsigned int color) {
   tft.setTextColor(color);
 
-  image_draw->bmpDraw(openweather.getWeatherIcon(), co[2].x, co[2].y);
+  tft.setCursor(co[1].x, co[1].y);
+  tft.setFont(&LiberationSans_Regular24pt7b);
+  tft.print(last_outtemp, 1);
+  tft.setFont(&LiberationSans_Regular4pt7b);
+  tft.print(" o");
 
   return 0;
 }
 
-uint8_t Page_Normal::C3(unsigned int color) {
+uint8_t Page_Normal::ThermostatSetPt(unsigned int color) {
   tft.setTextColor(color);
 
   tft.setCursor(co[3].x, co[3].y);
-  tft.setFont(&LiberationSans_Regular12pt7b);
-  tft.print("25.5");
+  tft.setFont(&LiberationSans_Regular40pt7b);
+  tft.print(thermostat.GetTempSetPt(), 1);
   tft.setFont(&LiberationSans_Regular4pt7b);
   tft.print(" o");
 

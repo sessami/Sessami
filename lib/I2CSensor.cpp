@@ -53,17 +53,18 @@ void I2CSensor::I2CWrite(uint8_t *reg, unsigned int size) {
 
 uint8_t I2CSensor::ReadRegister(uint8_t reg) {
 	Wire.beginTransmission(addr);
-	I2CWrite(reg);
+	I2CWrite(&reg, 1);
 	Wire.endTransmission();
 	Wire.requestFrom(addr, 1);
   return (I2CRead());
 }
 
+//TODO - Modify I2CSensor - change functions to protected and virual, and BlockRead, BlockWrite, WriteBit.
 uint8_t* I2CSensor::ReadRegister(uint8_t reg, uint8_t read_size) {
 	uint8_t *data = new uint8_t[read_size];
 
 	Wire.beginTransmission(addr);
-	I2CWrite(reg);
+	I2CWrite(&reg, 1);
 	Wire.endTransmission();
  
   delay(100);

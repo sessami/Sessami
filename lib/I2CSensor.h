@@ -58,13 +58,12 @@ protected:
 
 	virtual bool initWireI2C() = 0;
 	uint8_t I2CRead();
-	void I2CWrite(uint8_t reg, unsigned int size);
+	void I2CWrite(uint8_t *reg, unsigned int size);
 	
 	virtual uint8_t ReadRegister(uint8_t reg);
 	virtual void WriteRegister(uint8_t reg, uint8_t value);
 	virtual uint8_t* ReadRegister(uint8_t reg, uint8_t read_size);
 	virtual void WriteRegBit(uint8_t reg, uint8_t xbit, State st);
-	virtual 
 	
 };
 

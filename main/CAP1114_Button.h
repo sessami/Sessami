@@ -33,18 +33,19 @@ enum class SlideEnum {
 #define B_DOWN 4 //Sensor 3
 #define B_RIGHT 16 //Sensor 5
 
-#define S_PH 257
-#define S_TAP 258
-#define S_RIGHT 260
-#define S_LEFT 264
-#define S_RESET 288
-#define S_MULT 320
+#define S_PH 257 //256 + 1 
+#define S_TAP 258 //256 + 2
+#define S_RIGHT 260 //256 +4
+#define S_LEFT 264 //256 + 8
+#define S_RESET 288 //256+32
+#define S_MULT 320 //256+64
 
 class Sessami_Button: private CAP1114_Driver {
   private:
     static uint8_t button_state;
     static uint8_t slide_state;
     static unsigned long held_t;
+    static unsigned long button_hold_t;
     static unsigned int button_tap;
     static uint8_t delta_sen;
     static uint8_t prox_sen;
@@ -63,6 +64,7 @@ class Sessami_Button: private CAP1114_Driver {
     uint8_t GetSli();
     unsigned long GetHeldT();
     void HeldCount();
+    void HoldCount();
     bool BuTap();
 
     //42h Prox Sensitivity
@@ -82,6 +84,7 @@ class Sessami_Button: private CAP1114_Driver {
 uint8_t Sessami_Button::button_state = 0;
 uint8_t Sessami_Button::slide_state = 0;
 unsigned long Sessami_Button::held_t = 0;
+unsigned long Sessami_Button::button_hold_t = 0;
 unsigned int Sessami_Button::button_tap = 0;
 uint8_t Sessami_Button::delta_sen = 4; //0-most, 7-least
 uint8_t Sessami_Button::prox_sen = 4; //0-most, 7-least

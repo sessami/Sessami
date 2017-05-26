@@ -15,6 +15,7 @@
 
 #include <OpenWeather_ESP8266.h>
 #include <WifiManage.h>
+#include <Si7020.h>
 #include "CAP1114_Button.h"
 #include "CAP1114_LED.h"
 
@@ -50,13 +51,15 @@ class SessamiController {
     time_t hr_counter;
     uint8_t state, last_state;
     static int time_zone;
+    static bool interrupt;
     bool ui_rst;
     bool engg_mode;
     TouchController *tc;
     Sessami_Button *button;
     Sessami_LED *led;
     WifiManage wifi;
-    SessamiUI *ui[3];
+    Si7020 temp_sensor;
+    SessamiUI *ui[2];
     
     //For Develop
     SessamiUI *engg_ui[6];
@@ -70,6 +73,7 @@ class SessamiController {
     /*****************************************************************************************
      *  This is the function for update
     ******************************************************************************************/
+    static void Interrupt();
     void Background();
     void Mode();
 
@@ -83,6 +87,7 @@ class SessamiController {
 
 //---------------------------------Static Variable-------------------------------
 int SessamiController::time_zone = 8;
+bool SessamiController::interrupt = false;
 
 //---------------------------------Constructor & Destructor-------------------------------
 SessamiController::SessamiController() :
@@ -114,12 +119,14 @@ SessamiController::SessamiController() :
 
   tc->Update();
   openweather.Update();
+  temp_sensor.UpdateRH();
+  temp_sensor.UpdateTp();
 
   interval_ow = 1;
 
   ui[0] = (SessamiUI *)new Page_Standby;
   ui[1] = (SessamiUI *)new Page_Normal;
-  ui[2] = (SessamiUI *)new Page_StbNor;
+  //ui[2] = (SessamiUI *)new Page_StbNor;
 
   //For Develop
   engg_ui[0] = (SessamiUI *)new Page_Standby;

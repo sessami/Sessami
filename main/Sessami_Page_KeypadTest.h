@@ -39,11 +39,11 @@ uint8_t Page_KeypadTest::UIStateMachine(bool rst) {
       break;
   }
   
-  if ( (*button == SlideEnum::RIGHT) && (*button == SlideEnum::TAP) ) {
+  if ( (*button == SlideEnum::RIGHT) || (*button == SlideEnum::TAP) ) {
     C1(ILI9341_BLACK);
     idx++;
     C1(ILI9341_WHITE);
-  } else if ( (*button == SlideEnum::LEFT) && (*button == SlideEnum::TAP) ) {
+  } else if ( (*button == SlideEnum::LEFT) || (*button == SlideEnum::TAP) ) {
     C1(ILI9341_BLACK);
     idx--;
     C1(ILI9341_WHITE);

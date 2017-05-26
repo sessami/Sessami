@@ -1,5 +1,8 @@
 #include "Si7020.h"
 
+float Si7020::humidity = 0.0;
+float Si7020::temperature = 0.0;
+
 bool Si7020::initWireI2C() {
 	/*Serial.print("Product ID: 0x");
 	Serial.println(ReadRegister(CAP1114_PRODID), HEX);
@@ -15,20 +18,28 @@ bool Si7020::initWireI2C() {
 	return true;
 }
 
-float Si7020::GetRH() {
+void Si7020::UpdateRH() {
   uint8_t *data = ReadRegister(0xF5, 3);
   uint16_t code = data[0] << 8;
   code += (data[1] & 0xFC);
   delete[] data;
-  return ( (125.0*(float)code)/65536.0 ) - 6.0;
+  humidity = ( (125.0*(float)code)/65536.0 ) - 6.0;
 }
 
-float Si7020::GetTp() {
+void Si7020::UpdateTp() {
   uint8_t *data = ReadRegister(0xF3, 2);
   uint16_t code = data[0] << 8;
   code += (data[1] &= 0xFC);
   delete[] data;
-  return ( (175.72*(float)code)/65536.0 ) - 46.85;
+  temperature = ( (175.72*(float)code)/65536.0 ) - 46.85;
+}
+
+float Si7020::GetRH() {
+	return humidity;
+}
+
+float Si7020::GetTp() {
+	return temperature;
 }
 
 uint8_t Si7020::ReadUserReg1() {

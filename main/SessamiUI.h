@@ -21,6 +21,8 @@ typedef String string;
 #define TFT_DC 16
 #define TFT_CS 4
 
+#define SCREENWIDTH   320
+#define SCREENHEIGHT  240
 struct Coordinates {
   uint16_t x;
   uint16_t y;
