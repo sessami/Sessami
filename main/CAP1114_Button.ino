@@ -72,6 +72,10 @@ void Sessami_Button::UpdateBut() {
     held_t = 0;
   if (button_state < 2)
     button_hold_t = 0;
+
+  UpdateMSControl();
+  if (GetMSControl(MSControl::INT))
+    SetMSControl(MSControl::INT, LO);
 }
 
 uint8_t Sessami_Button::GetBut() {

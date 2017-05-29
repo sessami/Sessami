@@ -13,13 +13,13 @@
 using namespace CAP1114;
 
 enum class ButtonEnum {PROX = B0,
-  MID = B5,
-  LEFT = B6,
-  UP = B1,
-  POWER = B3,
-  DOWN = B2,
-  RIGHT = B4
-};
+                       MID = B5,
+                       LEFT = B6,
+                       UP = B1,
+                       POWER = B3,
+                       DOWN = B2,
+                       RIGHT = B4
+                      };
 
 enum class SlideEnum {
   PH = B0, TAP = B1, RIGHT = B2, LEFT = B3, RESET = B5, MULT = B6, LID = B7
@@ -68,7 +68,7 @@ class Sessami_Button: private CAP1114_Driver {
     bool BuTap();
 
     //42h Prox Sensitivity
-    void SetPROXSen(uint8_t value); 
+    void SetPROXSen(uint8_t value);
     uint8_t GetPROXSen();
     //1Fh Data Sensitivity
     void SetButSen(uint8_t value);
@@ -93,7 +93,62 @@ int8_t Sessami_Button::delta_count[8] = {0, 0, 0, 0,   0, 0, 0, 0};
 
 Sessami_Button::Sessami_Button() :
   CAP1114_Driver() {
-    
+  bool sg, gp;
+  uint8_t rpt_ph, m_press, max_dur, rpt_sl;
+
+#if defined(ESP8266)
+  Serial.println("SPI Max Speed");
+#endif
+
+  Serial.println("---------CAP1114 initialization Start-----------");
+
+  if (!initWireI2C())
+    Serial.println("CAP1114 communication fail!");
+  else {
+    //--------------------------------CAP1114 initialization -----------------------------
+    SetMTConfig(0);
+    SetIntEn(0xFF);//(uint8_t)IntEn::G); //interrupt Enable
+    Serial.print("Interrupt Enable : ");
+    Serial.println(GetIntEn(), 2);
+
+    SetMaxDurCalConfig(LO, LO);
+    SetRptRateConfig(LO, HI);
+    Serial.print("Repeat Rate Enable : ");
+    GetRptRateConfig(&sg, &gp);
+    Serial.print(sg);
+    Serial.print("   ");
+    Serial.println(gp);
+
+    GetGroupConfig(&rpt_ph, &m_press, &max_dur, &rpt_sl);
+    Serial.print("Group Config : ");
+    Serial.print(rpt_ph, 2);
+    Serial.print("   ");
+    Serial.print(m_press, 2);
+    Serial.print("   ");
+    Serial.print(max_dur, 2);
+    Serial.print("   ");
+    Serial.println(rpt_sl, 2);
+
+    SetGPIODir(B01111111);
+    Serial.print("GPIO Direction: ");
+    Serial.println(GetGPIODir(), 2);
+
+    SetOutputType(B01110000);
+
+    SetAccelEN(HI);
+    SetProxEN(HI); //On Proximity
+
+    SetProxSen(4); //Set Sensivity  0-most, 7-least
+    SetCalAct(0xFF); //Calibrate all Sensor
+
+    SetDeltaSen(4);
+    Serial.print("Delta Sensitivity : ");
+    Serial.println(GetDeltaSen());
+
+    Serial.println("---------CAP1114 initialization End-----------");
+    Serial.println();
+    SetMSControl(MSControl::INT, LO);
+  }
 }
 
 Sessami_Button::~Sessami_Button() {

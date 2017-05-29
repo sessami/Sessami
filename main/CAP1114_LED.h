@@ -30,6 +30,8 @@ class Sessami_LED: private CAP1114_Driver {
 
 Sessami_LED::Sessami_LED() :
   CAP1114_Driver() {
+  SetLEDLinking((uint8_t)LEDLinking::Group | (uint8_t)LEDLinking::CS4 | (uint8_t)LEDLinking::CS3 | (uint8_t)LEDLinking::CS2);
+  SetLED(B00000000); // - | LEFT | MID | RIGHT | POWER | DOWN | UP | PROX
 }
 
 Sessami_LED::~Sessami_LED() {

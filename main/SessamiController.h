@@ -20,7 +20,6 @@
 #include "CAP1114_LED.h"
 
 #include "SessamiUI.h"
-#include "CAP1114_TouchController.h"
 //#include "TemperatureHumidity_Si7006A20.h"
 
 #include "Sessami_Page_Standby.h"
@@ -54,7 +53,6 @@ class SessamiController {
     static bool interrupt;
     bool ui_rst;
     bool engg_mode;
-    TouchController *tc;
     Sessami_Button *button;
     Sessami_LED *led;
     WifiManage wifi;
@@ -113,11 +111,9 @@ SessamiController::SessamiController() :
   _time.Minute = minute();
   _time.Hour = hour();
 
-  tc = new TouchController;
   button = new Sessami_Button;
   led = new Sessami_LED;
 
-  tc->Update();
   openweather.Update();
   temp_sensor.UpdateRH();
   temp_sensor.UpdateTp();

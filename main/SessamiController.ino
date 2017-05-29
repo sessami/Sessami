@@ -80,7 +80,6 @@ void SessamiController::Mode() {
     
   ui_rst = false;
   if (interrupt) {
-    tc->Update();
     interrupt = false;
   }
 }
