@@ -24,18 +24,19 @@ using namespace CAP1114;
 //#define S_TAP 258 //256 + 2  change to bool
 #define S_RIGHT 260 //256 +1
 #define S_LEFT 264 //256 + 2
-#define S_RESET 288 //256+32
-#define S_MULT 320 //256+64
+//#define S_RESET 288 //256+32
+//#define S_MULT 320 //256+64
 
 class Sessami_Button: private CAP1114_Driver {
   private:
-    static uint8_t button_state;
-    static uint8_t slide_state;
-    static unsigned long held_t;
-    static unsigned long button_hold_t;
-    static unsigned int button_tap;
-    static bool slide_tap;
-    static bool slide_ph;
+    uint8_t button_state;
+    uint8_t slide_state;
+    unsigned long held_t;
+    unsigned long button_hold_t;
+    unsigned int button_tap;
+    uint8_t slide_tap;
+    uint8_t slide_ph;
+    
     static uint8_t delta_sen;
     static uint8_t prox_sen;
     static uint8_t threshold[8];

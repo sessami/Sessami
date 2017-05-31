@@ -31,9 +31,10 @@ void setup() {
 }
 
 void loop() {
-  Background();
-  button->UpdateBut();
+  Background(); //time counter for tap and Press
+  button->UpdateBut(); //Update Button Status
 
+/* Button Function */
   ButTest();
 }
 
