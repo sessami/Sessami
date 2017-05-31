@@ -28,22 +28,22 @@ void Sessami_Button::UpdateBut() {
   uint8_t ss = 0, ssB01 = 0, ssB56 = 0, ssB23 = 0;
 
   UpdateSlide(&debug);
-  if (debug > 0) {
+  ss = GetSlide();
+  /*if (debug > 0) {
     Serial.print("Update SS: ");
     Serial.println(debug, 2);
   }
-  ss = GetSlide();
   if (ss > 0) {
     Serial.print("Get SS: ");
     Serial.println(ss, 2);
-  }
+  }*/
 
   UpdateCS(&debug, &debug2);
   cs = GetCS();
-  Serial.print("Update CS: ");
-  Serial.print(debug2, 2);
-  Serial.print("   ");
-  Serial.println(debug, 2);
+  //Serial.print("Update CS: ");
+  //Serial.print(debug2, 2);
+  //Serial.print("   ");
+  //Serial.println(debug, 2);
   //Serial.print("Get CS: ");
   //Serial.println(cs, 2);
 
@@ -69,7 +69,7 @@ void Sessami_Button::UpdateBut() {
 
   if ((button_state != 0) || (slide_state != 0))
     held_t = 0;
-  if ((button_state == 0) || (slide_state == 0))
+  if ((button_state == 0) && (slide_state == 0))
     button_hold_t = 0;
 
   UpdateMSControl(&debug);
