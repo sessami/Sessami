@@ -224,6 +224,9 @@ protected:
 
 	 Determined by POS_VOL bit (20h)
 	 */
+private:
+	static uint8_t st_06;
+protected:
 	uint8_t GetSliPos();
 	uint8_t GetVolData();
 	uint8_t SetVolData(uint8_t);
@@ -253,6 +256,9 @@ protected:
 	 1Fh RW - Data Sensitivity Registers
 	  - | DELTA_SENSE[2:0] | BASE_SHIFT[3:0]
 	 */
+private:
+	static uint8_t st_1F_ds, st_1F_bs;
+protected:
 	 uint8_t GetDeltaSen();
 	 uint8_t GetBaseShift();
 	 
@@ -263,6 +269,10 @@ protected:
 	 20h RW - Configuration Registers
 	 TIMEOUT | POS_VOL | BLK_DIG_NOISE | BLK_ANA_NOISE | MAX_DUR_EN_B | RPT_EN_B | MAX_DUR_EN_G | RPT_EN_G
 	 */
+private:
+	static uint8_t st_20;
+protected:
+	void UpdateConfigRegister();
 	bool GetTimeOutConfig();bool GetPosVolConfig();bool GetNoiseConfig(bool *th,
 	bool *flag); //noise threshold, noise flag
 	bool GetMaxDurCalConfig(bool *sg, bool *gp); //nHI grouped, grouped
@@ -279,6 +289,7 @@ protected:
 	 RPT_RATE_PH[3:0] | M_PRESS[3:0]
 	 MAX_DUR_G[3:0] | RPT_RATE_SL[3:0]
 	 */
+protected:
 	void GetGroupConfig(uint8_t *rpt_ph = 0, uint8_t *m_press = 0,
 			uint8_t *max_dur = 0, uint8_t *rpt_sl = 0);
 
@@ -344,7 +355,10 @@ protected:
 	 42h RW - Proximity Control Registers
 	 CS1_PROX | PROX_SUM | - | PROX_AVG[1:0] | PROX_D_SENSE[2:0]
 	 */
+private:
+	static uint8_t st_42;
 protected:
+	void UpdateProxRegister();
 	bool GetProxEN();
 	bool GetProxSum();
 	uint8_t GetProxAvg();

@@ -63,7 +63,8 @@ protected:
 	virtual uint8_t ReadRegister(uint8_t reg);
 	virtual void WriteRegister(uint8_t reg, uint8_t value);
 	virtual uint8_t* ReadRegister(uint8_t reg, uint8_t read_size);
-	virtual void WriteRegBit(uint8_t reg, uint8_t xbit, State st);
+	void WriteRegBit(uint8_t reg, uint8_t xbit, State st);
+	virtual void WriteRegBit(uint8_t reg, uint8_t xbit, State st, uint8_t *byte);
 	
 };
 

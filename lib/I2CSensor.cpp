@@ -96,9 +96,22 @@ void I2CSensor::WriteRegBit(uint8_t reg, uint8_t xbit, State st) {
 	uint8_t tmp = ReadRegister(reg);
 
 	if (st)
-		WriteRegister(reg, tmp | xbit);
+		tmp = tmp | xbit;
 	else
-		WriteRegister(reg, tmp & ~xbit);
+		tmp = tmp & ~xbit;
+	
+	WriteRegister(reg, tmp);
+}
+
+void I2CSensor::WriteRegBit(uint8_t reg, uint8_t xbit, State st, uint8_t *byte) {
+	//uint8_t tmp = ReadRegister(reg);
+
+	if (st)
+		*byte = *byte | xbit;
+	else
+		*byte = *byte & ~xbit;
+	
+	WriteRegister(reg, *byte);
 }
 
 I2CSensor::I2CSensor(int _addr) :
