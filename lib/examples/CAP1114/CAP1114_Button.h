@@ -20,10 +20,10 @@ using namespace CAP1114;
 #define B_DOWN 4 //Sensor 3
 #define B_RIGHT 16 //Sensor 5
 
-#define S_PH 257 //256 + 1 
-#define S_TAP 258 //256 + 2
-#define S_RIGHT 260 //256 +4
-#define S_LEFT 264 //256 + 8
+//#define S_PH 257 //256 + 1  change to bool
+//#define S_TAP 258 //256 + 2  change to bool
+#define S_RIGHT 260 //256 +1
+#define S_LEFT 264 //256 + 2
 #define S_RESET 288 //256+32
 #define S_MULT 320 //256+64
 
@@ -34,6 +34,8 @@ class Sessami_Button: private CAP1114_Driver {
     static unsigned long held_t;
     static unsigned long button_hold_t;
     static unsigned int button_tap;
+    static bool slide_tap;
+    static bool slide_ph;
     static uint8_t delta_sen;
     static uint8_t prox_sen;
     static uint8_t threshold[8];
@@ -71,6 +73,8 @@ uint8_t Sessami_Button::slide_state = 0;
 unsigned long Sessami_Button::held_t = 0;
 unsigned long Sessami_Button::button_hold_t = 0;
 unsigned int Sessami_Button::button_tap = 0;
+bool Sessami_Button::slide_tap = 0;
+bool Sessami_Button::slide_ph = 0;
 uint8_t Sessami_Button::delta_sen = 4; //0-most, 7-least
 uint8_t Sessami_Button::prox_sen = 4; //0-most, 7-least
 uint8_t Sessami_Button::threshold[8] = {0, 0, 0, 0,   0, 0, 0, 0};

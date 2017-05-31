@@ -17,6 +17,7 @@ uint8_t debug2;
 
 //button constructor needs I2C connection 
 Sessami_Button *button;
+Sessami_LED *led;
 
 void setup() {
   Serial.begin(115200);
@@ -26,6 +27,7 @@ void setup() {
   Wire.begin(SESSAMI_SDA, SESSAMI_SCL);
   //create button object after I2C setup
   button = new Sessami_Button;
+  led = new Sessami_LED;
 }
 
 void loop() {
@@ -47,5 +49,20 @@ void Background() {
 void ButTest() {
   if (*button == B_UP)
     Serial.println("UP");
+  if (*button == B_DOWN)
+    Serial.println("DOWN");
+  if (*button == B_POWER)
+    Serial.println("POWER");
+  if (*button == B_LEFT)
+    Serial.println("LEFT");
+  if (*button == B_MID)
+    Serial.println("MID");
+  if (*button == B_RIGHT)
+    Serial.println("RIGHT");
+
+  if (*button == S_LEFT)
+    Serial.println("Slider LEFT");
+  if (*button == S_RIGHT)
+    Serial.println("Slider RIGHT");
 }
 

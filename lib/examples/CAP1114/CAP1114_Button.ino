@@ -51,15 +51,26 @@ void Sessami_Button::UpdateBut() {
   button_state |= (uint8_t)((cs >> 2) & B01000000);
   //Serial.print("Get BS: ");
   //Serial.println(button_state, 2);
+  slide_state = ( (uint8_t)(cs & B11000000) ) >> 6;
 
   ssB01 = (ss & B00000011);
-  ssB23 = ( (uint8_t)(cs & B11000000) ) >> 4;
-  ssB56 = (ss & B01100000);
-  slide_state = ssB01 + ssB23 + ssB56;
-  if (slide_state > 0) {
+  if ((ssB01 & 1)>0)
+    slide_tap = true;
+  else
+    slide_tap = false;
+  if ((ssB01 & 2)>0)
+    slide_ph = true;
+  else
+    slide_ph = false;
+  ssB56 = (ss & B01100000)>>5;
+  if (ssB56 & 1)
+    Serial.println("Exit the reset state");
+  if (ssB56 & 2)
+    Serial.println("Touches Blocked");
+  /*if (slide_state > 0) {
     Serial.print("Get S_S: ");
     Serial.println(slide_state, 2);
-  }
+  }*/
   
 
   if (button_state > 1)
