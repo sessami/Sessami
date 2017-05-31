@@ -69,7 +69,7 @@ void Sessami_Button::UpdateBut() {
 
   if ((button_state != 0) || (slide_state != 0))
     held_t = 0;
-  if ((button_state == 0) && (slide_state == 0))
+  if ((button_state <= 1) && (slide_state == 0))
     button_hold_t = 0;
 
   UpdateMSControl(&debug);
@@ -96,11 +96,13 @@ unsigned long Sessami_Button::GetHeldT() {
 }
 
 void Sessami_Button::HeldCount() {
-  held_t++;
+  if ((button_state == 0) && (slide_state == 0))
+    held_t++;
 }
 
 void Sessami_Button::HoldCount() {
-  button_hold_t++;
+  if ((button_state > 1) || (slide_state != 0))
+    button_hold_t++;
 }
 
 bool Sessami_Button::BuTap() {

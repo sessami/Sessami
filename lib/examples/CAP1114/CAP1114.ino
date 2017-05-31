@@ -37,6 +37,7 @@ void loop() {
 
 void Background() {
   if (second() != _time.Second) {
+    _time.Second = second();
     //Update per second
     button->HeldCount();
     button->HoldCount();
