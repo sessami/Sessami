@@ -21,13 +21,6 @@ uint8_t CAP1114_Driver::st_00 = 0, CAP1114_Driver::st_03 = 0,
 
 
 bool CAP1114_Driver::initWireI2C() {
-	Serial.print("Product ID: 0x");
-	Serial.println(ReadRegister(CAP1114_PRODID), HEX);
-	Serial.print("Manuf. ID: 0x");
-	Serial.println(ReadRegister(CAP1114_MANUID), HEX);
-	Serial.print("Revision: 0x");
-	Serial.println(ReadRegister(CAP1114_REV), HEX);
-
 	if ((ReadRegister(CAP1114_PRODID) != 0x3A)
 			|| (ReadRegister(CAP1114_MANUID) != 0x5D)
 			|| (ReadRegister(CAP1114_REV) != 0x10))
@@ -82,15 +75,15 @@ void CAP1114_Driver::UpdateMSControl(uint8_t *status) {
 	if (status)
 		*status = st_00;
 }
-State CAP1114_Driver::GetMSControl(MSControl b) const {
-	return (st_00 & (uint8_t) b);
+State CAP1114_Driver::GetMSControl(uint8_t b) const {
+	return (st_00 & b);
 }
 void CAP1114_Driver::SetMSControl(uint8_t value) {
 	WriteRegister(CAP1114_MAIN, value);
 	st_00 = value;
 }
-void CAP1114_Driver::SetMSControl(MSControl b, State st) {
-	WriteRegBit(CAP1114_MAIN, (uint8_t) b, st, &st_00);
+void CAP1114_Driver::SetMSControl(uint8_t b, State st) {
+	WriteRegBit(CAP1114_MAIN, b, st, &st_00);
 }
 
 //Button Status Register
@@ -106,10 +99,10 @@ void CAP1114_Driver::UpdateCS(uint8_t *status1, uint8_t *status2) {
 uint16_t CAP1114_Driver::GetCS() const {
 	return ((st_04 << 8) | st_03);
 }
-State CAP1114_Driver::GetCS(CS b) const {
-	if ((uint8_t) b <= 0xFF)
-		return (st_03 & (uint8_t) b);
-	return st_04 & ((uint8_t) b & HBMASK);
+State CAP1114_Driver::GetCS(uint16_t b) const {
+	if (b <= 0xFF)
+		return (st_03 & b);
+	return st_04 & (b - HBMASK);
 }
 
 //Group Status Register

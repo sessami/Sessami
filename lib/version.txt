@@ -1,18 +1,6 @@
 v2.2.5
 WORKING:
 CHANGED:
-	Added all button example and fix bug in button.ino
-PENDING:
-	CAP1114 Driver - Replace Enums by define
-	CAP1114 Driver - Use static varible for decrease I2C Write Bit.
-	Modify I2CSensor - change functions to protected and virual, 
-						and BlockRead, BlockWrite, WriteBit.
-BUG:
-	OpenWeather - ArduinoJson phasing float to int, int to float.
-
-v2.2.5
-WORKING:
-CHANGED:
 	Added button example into lib
 PENDING:
 	CAP1114 Driver - Replace Enums by define

@@ -25,7 +25,7 @@ bool Sessami_Button::operator==(const unsigned int key) const {
 
 void Sessami_Button::UpdateBut() {
   uint16_t cs = 0;
-  uint8_t ss = 0, ssB56 = 0;
+  uint8_t ss = 0, ssB01 = 0, ssB56 = 0, ssB23 = 0;
 
   UpdateSlide(&debug);
   ss = GetSlide();
@@ -53,8 +53,15 @@ void Sessami_Button::UpdateBut() {
   //Serial.println(button_state, 2);
   slide_state = ( (uint8_t)(cs & B11000000) ) >> 6;
 
-  slide_tap = (ss & B00000001);
-  slide_ph = (ss & B00000010) >> 1;
+  ssB01 = (ss & B00000011);
+  if ((ssB01 & 1)>0)
+    slide_tap = true;
+  else
+    slide_tap = false;
+  if ((ssB01 & 2)>0)
+    slide_ph = true;
+  else
+    slide_ph = false;
   ssB56 = (ss & B01100000)>>5;
   if (ssB56 & 1)
     Serial.println("Exit the reset state");
@@ -79,8 +86,8 @@ void Sessami_Button::UpdateBut() {
   UpdateMSControl(&debug);
   /*Serial.print("Update MS: ");
   Serial.println(debug, 2);*/
-  if (debug = GetMSControl(MSControl::INT))
-    SetMSControl(MSControl::INT, LO);
+  if (debug = GetMSControl(MSControl_INT))
+    SetMSControl(MSControl_INT, LO);
   /*Serial.print("Get MS: ");
   Serial.println(debug, 2);*/
 

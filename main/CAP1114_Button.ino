@@ -9,18 +9,6 @@
 
 using namespace CAP1114;
 
-bool Sessami_Button::operator==(const ButtonEnum button) const {
-  if ((button_state & (uint8_t)button) > 0)
-    return true;
-  return false;
-}
-
-bool Sessami_Button::operator==(const SlideEnum slide) const {
-  if ((slide_state & (uint8_t)slide) > 0)
-    return true;
-  return false;
-}
-
 bool Sessami_Button::operator==(const unsigned int key) const {
   if (key < 256) {
     if ( (((unsigned int)button_state & key) > 0) && (button_tap == 1) )
@@ -47,21 +35,23 @@ void Sessami_Button::UpdateBut() {
 
   button_state = (uint8_t)(cs & B00111111);
   button_state |= (uint8_t)((cs >> 2) & B01000000);
-
-  if (ss > 0) {
-    Serial.print("ss ");
-    Serial.println(ss, 2);
-  }
+  slide_state = ( (uint8_t)(cs & B11000000) ) >> 6;
 
   ssB01 = (ss & B00000011);
-  ssB23 = ( (uint8_t)(cs & B11000000) ) >> 4;
-  ssB56 = (ss & B01100000);
-  slide_state = ssB01 + ssB23 + ssB56;
-
-  if (slide_state > 0) {
-    Serial.print("slide_state ");
-    Serial.println(slide_state, 2);
-  }
+  if ((ssB01 & 1)>0)
+    slide_tap = true;
+  else
+    slide_tap = false;
+  if ((ssB01 & 2)>0)
+    slide_ph = true;
+  else
+    slide_ph = false;
+  ssB56 = (ss & B01100000)>>5;
+  if (ssB56 & 1)
+    Serial.println("Exit the reset state");
+  if (ssB56 & 2)
+    Serial.println("Touches Blocked");
+  
 
   if (button_state > 1)
     button_tap++;
@@ -70,12 +60,12 @@ void Sessami_Button::UpdateBut() {
 
   if ((button_state != 0) || (slide_state != 0))
     held_t = 0;
-  if (button_state < 2)
+  if ((button_state <= 1) && (slide_state == 0))
     button_hold_t = 0;
 
   UpdateMSControl();
-  if (GetMSControl(MSControl::INT))
-    SetMSControl(MSControl::INT, LO);
+  if (GetMSControl(MSControl_INT))
+    SetMSControl(MSControl_INT, LO);
 }
 
 uint8_t Sessami_Button::GetBut() {
@@ -91,11 +81,13 @@ unsigned long Sessami_Button::GetHeldT() {
 }
 
 void Sessami_Button::HeldCount() {
-  held_t++;
+  if ((button_state == 0) && (slide_state == 0))
+    held_t++;
 }
 
 void Sessami_Button::HoldCount() {
-  button_hold_t++;
+  if ((button_state > 1) || (slide_state != 0))
+    button_hold_t++;
 }
 
 bool Sessami_Button::BuTap() {
@@ -104,6 +96,7 @@ bool Sessami_Button::BuTap() {
   else
     return false;
 }
+
 
 void Sessami_Button::SetPROXSen(uint8_t value) {
   prox_sen = value;

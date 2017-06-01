@@ -231,75 +231,75 @@ uint8_t Page_ButtonSen::Menu(bool prt) {
   int value = 0;
   switch (idx) {
     case 0:
-      if (*button == SlideEnum::LEFT) {//( (*button == S_LEFT) || (*button == S_RIGHT) ) {
+      if (*button == S_LEFT) {//( (*button == S_LEFT) || (*button == S_RIGHT) ) {
         button->SetTh(B_PROX, button->Getthreshold(B_PROX) - 1);
         C4(idx);
-      } else if (*button == SlideEnum::RIGHT) {
+      } else if (*button == S_RIGHT) {
         button->SetTh(B_PROX, button->Getthreshold(B_PROX) + 1);
         C4(idx);
       }
       break;
     case 1:
-      if (*button == SlideEnum::LEFT) {//( (*button == S_LEFT) || (*button == S_RIGHT) ) {
+      if (*button == S_LEFT) {//( (*button == S_LEFT) || (*button == S_RIGHT) ) {
         button->SetTh(B_UP, button->Getthreshold(B_UP) - 1);
         C4(idx);
-      } else if (*button == SlideEnum::RIGHT) {
+      } else if (*button == S_RIGHT) {
         button->SetTh(B_UP, button->Getthreshold(B_UP) + 1);
         C4(idx);
       }
       break;
     case 2:
-      if (*button == SlideEnum::LEFT) {//( (*button == S_LEFT) || (*button == S_RIGHT) ) {
+      if (*button == S_LEFT) {//( (*button == S_LEFT) || (*button == S_RIGHT) ) {
         button->SetTh(B_DOWN, button->Getthreshold(B_DOWN) - 1);
         C4(idx);
-      } else if (*button == SlideEnum::RIGHT) {
+      } else if (*button == S_RIGHT) {
         button->SetTh(B_DOWN, button->Getthreshold(B_DOWN) + 1);
         C4(idx);
       }
       break;
     case 3:
-      if (*button == SlideEnum::LEFT) {//( (*button == S_LEFT) || (*button == S_RIGHT) ) {
+      if (*button == S_LEFT) {//( (*button == S_LEFT) || (*button == S_RIGHT) ) {
         button->SetTh(B_POWER, button->Getthreshold(B_POWER) - 1);
         C4(idx);
-      } else if (*button == SlideEnum::RIGHT) {
+      } else if (*button == S_RIGHT) {
         button->SetTh(B_POWER, button->Getthreshold(B_POWER) + 1);
         C4(idx);
       }
       break;
     case 4:
-      if (*button == SlideEnum::LEFT) {//( (*button == S_LEFT) || (*button == S_RIGHT) ) {
+      if (*button == S_LEFT) {//( (*button == S_LEFT) || (*button == S_RIGHT) ) {
         button->SetTh(B_RIGHT, button->Getthreshold(B_RIGHT) - 1);
         C4(idx);
-      } else if (*button == SlideEnum::RIGHT) {
+      } else if (*button == S_RIGHT) {
         button->SetTh(B_RIGHT, button->Getthreshold(B_RIGHT) + 1);
         C4(idx);
       }
       break;
     case 5:
-      if (*button == SlideEnum::LEFT) {//( (*button == S_LEFT) || (*button == S_RIGHT) ) {
+      if (*button == S_LEFT) {//( (*button == S_LEFT) || (*button == S_RIGHT) ) {
         button->SetTh(B_MID, button->Getthreshold(B_MID) - 1);
         C4(idx);
-      } else if (*button == SlideEnum::RIGHT) {
+      } else if (*button == S_RIGHT) {
         button->SetTh(B_MID, button->Getthreshold(B_MID) + 1);
         C4(idx);
       }
       break;
     case 6:
-      if (*button == SlideEnum::LEFT) {//( (*button == S_LEFT) || (*button == S_RIGHT) ) {
+      if (*button == S_LEFT) {//( (*button == S_LEFT) || (*button == S_RIGHT) ) {
         button->SetTh(B_LEFT, button->Getthreshold(B_LEFT) - 1);
         C4(idx);
-      } else if (*button == SlideEnum::RIGHT) {
+      } else if (*button == S_RIGHT) {
         button->SetTh(B_LEFT, button->Getthreshold(B_LEFT) + 1);
         C4(idx);
       }
       break;
     case 7:
       value = button->GetButSen();
-      if ( (*button == SlideEnum::LEFT) && (value > 0) ) {
+      if ( (*button == S_LEFT) && (value > 0) ) {
         value--;
         C4(idx);
         button->SetButSen(value);
-      } else if ( (*button == SlideEnum::RIGHT) && (value < 7) ) {
+      } else if ( (*button == S_RIGHT) && (value < 7) ) {
         value++;
         C4(idx);
         button->SetButSen(value);
@@ -307,11 +307,11 @@ uint8_t Page_ButtonSen::Menu(bool prt) {
       break;
     case 8:
       value = button->GetPROXSen();
-      if ( (*button == SlideEnum::LEFT) && (value > 0) ) {
+      if ( (*button == S_LEFT) && (value > 0) ) {
         value--;
         C4(idx);
         button->SetPROXSen(value);
-      } else if ( (*button == SlideEnum::RIGHT) && (value < 7) ) {
+      } else if ( (*button == S_RIGHT) && (value < 7) ) {
         value++;
         C4(idx);
         button->SetPROXSen(value);

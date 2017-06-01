@@ -15,7 +15,7 @@ tmElements_t _time;
 uint8_t debug;
 uint8_t debug2;
 
-//button constructor needs I2C connection 
+//button constructor needs I2C connection
 Sessami_Button *button;
 Sessami_LED *led;
 
@@ -28,13 +28,15 @@ void setup() {
   //create button object after I2C setup
   button = new Sessami_Button;
   led = new Sessami_LED;
+
+  /* Register Read Test */
+  ReadTest();
 }
 
 void loop() {
-  Background(); //time counter for tap and Press
-  button->UpdateBut(); //Update Button Status
+  Background();
+  button->UpdateBut();
 
-/* Button Function */
   ButTest();
 }
 
@@ -65,5 +67,15 @@ void ButTest() {
     Serial.println("Slider LEFT");
   if (*button == S_RIGHT)
     Serial.println("Slider RIGHT");
+}
+
+void ReadTest() {
+  //Main Status Control Register
+  Serial.print("Main Status Control: ");
+  //Serial.println(button->GetMSControl());
+
+  //Slider Position / Volumetric Data Register
+  Serial.print("Slider Position / Volumetric Data Register: ");
+  //Serial.println(button->GetSliPos());
 }
 

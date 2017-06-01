@@ -24,8 +24,8 @@ using namespace CAP1114;
 //#define S_TAP 258 //256 + 2  change to bool
 #define S_RIGHT 260 //256 +1
 #define S_LEFT 264 //256 + 2
-//#define S_RESET 288 //256+32
-//#define S_MULT 320 //256+64
+#define S_RESET 288 //256+32
+#define S_MULT 320 //256+64
 
 class Sessami_Button: private CAP1114_Driver {
   private:
@@ -34,13 +34,12 @@ class Sessami_Button: private CAP1114_Driver {
     unsigned long held_t;
     unsigned long button_hold_t;
     unsigned int button_tap;
-    uint8_t slide_tap;
-    uint8_t slide_ph;
-    
-    static uint8_t delta_sen;
-    static uint8_t prox_sen;
-    static uint8_t threshold[8];
-    static int8_t delta_count[8];
+    bool slide_tap;
+    bool slide_ph;
+    uint8_t delta_sen;
+    uint8_t prox_sen;
+    uint8_t threshold[8];
+    int8_t delta_count[8];
   public:
     Sessami_Button();
     ~Sessami_Button();
@@ -69,43 +68,24 @@ class Sessami_Button: private CAP1114_Driver {
     uint8_t Getthreshold(uint8_t key); //tmp
 };
 
-uint8_t Sessami_Button::button_state = 0;
-uint8_t Sessami_Button::slide_state = 0;
-unsigned long Sessami_Button::held_t = 0;
-unsigned long Sessami_Button::button_hold_t = 0;
-unsigned int Sessami_Button::button_tap = 0;
-bool Sessami_Button::slide_tap = 0;
-bool Sessami_Button::slide_ph = 0;
-uint8_t Sessami_Button::delta_sen = 4; //0-most, 7-least
-uint8_t Sessami_Button::prox_sen = 4; //0-most, 7-least
-uint8_t Sessami_Button::threshold[8] = {0, 0, 0, 0,   0, 0, 0, 0};
-int8_t Sessami_Button::delta_count[8] = {0, 0, 0, 0,   0, 0, 0, 0};
-
-Sessami_Button::Sessami_Button() :
-  CAP1114_Driver() {
-  bool sg, gp;
-  uint8_t rpt_ph, m_press, max_dur, rpt_sl;
-
+Sessami_Button::Sessami_Button() : CAP1114_Driver(), 
+    button_state(0),slide_state(0), held_t(0), button_hold_t(0), button_tap(0),
+    slide_tap(0), slide_ph(0) {
 #if defined(ESP8266)
-  Serial.println("SPI Max Speed");
+  Serial.println("I2C Max Speed");
 #endif
 
   Serial.println("---------CAP1114 initialization Start-----------");
-
   if (!initWireI2C())
     Serial.println("CAP1114 communication fail!");
   else {
-    //--------------------------------CAP1114 Test -----------------------------
+    //-----------------------Sessami Setting-----------------------------
     SetGPIODir(B01111111);
-    Serial.print("GPIO Direction: ");
-    Serial.println(GetGPIODir(), 2);
-
     SetOutputType(B01110000);
-    
     SetMTConfig(0); //Multi Touch
+    SetCalAct(0xFF); //Calibrate all Sensor
 
     SetProxSen(4); //Set Sensivity  0-most, 7-least
-    SetCalAct(0xFF); //Calibrate all Sensor
    /* SetDeltaSen(4);
     Serial.print("Delta Sensitivity : ");
     Serial.println(GetDeltaSen());*/

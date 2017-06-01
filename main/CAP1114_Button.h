@@ -12,19 +12,6 @@
 
 using namespace CAP1114;
 
-enum class ButtonEnum {PROX = B0,
-                       MID = B5,
-                       LEFT = B6,
-                       UP = B1,
-                       POWER = B3,
-                       DOWN = B2,
-                       RIGHT = B4
-                      };
-
-enum class SlideEnum {
-  PH = B0, TAP = B1, RIGHT = B2, LEFT = B3, RESET = B5, MULT = B6, LID = B7
-};
-
 #define B_PROX 1 //Sensor 1
 #define B_MID 32 //Sensor 6
 #define B_LEFT 64 //Sensor 7
@@ -33,30 +20,30 @@ enum class SlideEnum {
 #define B_DOWN 4 //Sensor 3
 #define B_RIGHT 16 //Sensor 5
 
-#define S_PH 257 //256 + 1 
-#define S_TAP 258 //256 + 2
-#define S_RIGHT 260 //256 +4
-#define S_LEFT 264 //256 + 8
+//#define S_PH 257 //256 + 1  change to bool
+//#define S_TAP 258 //256 + 2  change to bool
+#define S_RIGHT 260 //256 +1
+#define S_LEFT 264 //256 + 2
 #define S_RESET 288 //256+32
 #define S_MULT 320 //256+64
 
 class Sessami_Button: private CAP1114_Driver {
   private:
-    static uint8_t button_state;
-    static uint8_t slide_state;
-    static unsigned long held_t;
-    static unsigned long button_hold_t;
-    static unsigned int button_tap;
-    static uint8_t delta_sen;
-    static uint8_t prox_sen;
-    static uint8_t threshold[8];
-    static int8_t delta_count[8];
+    uint8_t button_state;
+    uint8_t slide_state;
+    unsigned long held_t;
+    unsigned long button_hold_t;
+    unsigned int button_tap;
+    bool slide_tap;
+    bool slide_ph;
+    uint8_t delta_sen;
+    uint8_t prox_sen;
+    uint8_t threshold[8];
+    int8_t delta_count[8];
   public:
     Sessami_Button();
     ~Sessami_Button();
 
-    bool operator==(const ButtonEnum button) const;
-    bool operator==(const SlideEnum slide) const;
     bool operator==(const unsigned int key) const;
 
     void UpdateBut();
@@ -81,37 +68,34 @@ class Sessami_Button: private CAP1114_Driver {
     uint8_t Getthreshold(uint8_t key); //tmp
 };
 
-uint8_t Sessami_Button::button_state = 0;
-uint8_t Sessami_Button::slide_state = 0;
-unsigned long Sessami_Button::held_t = 0;
-unsigned long Sessami_Button::button_hold_t = 0;
-unsigned int Sessami_Button::button_tap = 0;
-uint8_t Sessami_Button::delta_sen = 4; //0-most, 7-least
-uint8_t Sessami_Button::prox_sen = 4; //0-most, 7-least
-uint8_t Sessami_Button::threshold[8] = {0, 0, 0, 0,   0, 0, 0, 0};
-int8_t Sessami_Button::delta_count[8] = {0, 0, 0, 0,   0, 0, 0, 0};
-
-Sessami_Button::Sessami_Button() :
-  CAP1114_Driver() {
-  bool sg, gp;
-  uint8_t rpt_ph, m_press, max_dur, rpt_sl;
-
+Sessami_Button::Sessami_Button() : CAP1114_Driver(), 
+    button_state(0),slide_state(0), held_t(0), button_hold_t(0), button_tap(0),
+    slide_tap(0), slide_ph(0) {
 #if defined(ESP8266)
-  Serial.println("SPI Max Speed");
+  Serial.println("I2C Max Speed");
 #endif
 
   Serial.println("---------CAP1114 initialization Start-----------");
-
   if (!initWireI2C())
     Serial.println("CAP1114 communication fail!");
   else {
-    //--------------------------------CAP1114 initialization -----------------------------
-    SetMTConfig(0);
-    SetIntEn(0xFF);//(uint8_t)IntEn::G); //interrupt Enable
+    //-----------------------Sessami Setting-----------------------------
+    SetGPIODir(B01111111);
+    SetOutputType(B01110000);
+    SetMTConfig(0); //Multi Touch
+    SetCalAct(0xFF); //Calibrate all Sensor
+
+    SetProxSen(4); //Set Sensivity  0-most, 7-least
+   /* SetDeltaSen(4);
+    Serial.print("Delta Sensitivity : ");
+    Serial.println(GetDeltaSen());*/
+
+    
+    /*SetIntEn(0xFF);//(uint8_t)IntEn::G); //interrupt Enable
     Serial.print("Interrupt Enable : ");
     Serial.println(GetIntEn(), 2);
 
-    SetMaxDurCalConfig(LO, LO);
+    /*SetMaxDurCalConfig(LO, LO);
     SetRptRateConfig(LO, HI);
     Serial.print("Repeat Rate Enable : ");
     GetRptRateConfig(&sg, &gp);
@@ -127,27 +111,14 @@ Sessami_Button::Sessami_Button() :
     Serial.print("   ");
     Serial.print(max_dur, 2);
     Serial.print("   ");
-    Serial.println(rpt_sl, 2);
+    Serial.println(rpt_sl, 2);*/
 
-    SetGPIODir(B01111111);
-    Serial.print("GPIO Direction: ");
-    Serial.println(GetGPIODir(), 2);
-
-    SetOutputType(B01110000);
-
-    SetAccelEN(HI);
-    SetProxEN(HI); //On Proximity
-
-    SetProxSen(4); //Set Sensivity  0-most, 7-least
-    SetCalAct(0xFF); //Calibrate all Sensor
-
-    SetDeltaSen(4);
-    Serial.print("Delta Sensitivity : ");
-    Serial.println(GetDeltaSen());
+    /*SetAccelEN(HI);
+    SetProxEN(HI); //On Proximity*/
 
     Serial.println("---------CAP1114 initialization End-----------");
     Serial.println();
-    SetMSControl(MSControl::INT, LO);
+    //SetMSControl(MSControl::INT, LO);
   }
 }
 

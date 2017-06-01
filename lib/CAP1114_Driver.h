@@ -21,9 +21,11 @@ namespace CAP1114 {
 #define SLIPOS_CS13 0x52
 #define SLIPOS_CS14 0x62
 
-enum class MSControl {
-	INT = B0, PWR_LED = B1, DSLEEP = B4, SLEEP = B5, DEACT = B6
-};
+#define MSControl_INT		1
+#define MSControl_PWR_LED	2
+#define MSControl_DSLEEP	16
+#define MSControl_SLEEP		32
+#define MSControl_DEACT		64
 enum class LED {
 	LED1 = B0,
 	LED2 = B1,
@@ -55,6 +57,24 @@ enum class CS {
 	CS13 = HB | B6,
 	CS14 = HB | B7
 };
+
+#define CS_1		1
+#define CS_2		2
+#define CS_3		4
+#define CS_4		8
+#define CS_5		16
+#define CS_6		32
+#define CS_DOWN		64
+#define CS_UP		128
+#define CS_7		257
+#define CS_8		258
+#define CS_9		260
+#define CS_10		264
+#define CS_11		272
+#define CS_12		288
+#define CS_13		320
+#define CS_14		284
+
 enum class Slide {
 	PH = B0, TAP = B1, DOWN = B2, UP = B3, RESET = B5, MULT = B6, LID = B7
 };
@@ -191,9 +211,9 @@ private:
 	static uint8_t st_00;
 protected:
 	void UpdateMSControl(uint8_t *status = 0);
-	State GetMSControl(MSControl b) const;
+	State GetMSControl(uint8_t b) const;
 	void SetMSControl(uint8_t value);
-	void SetMSControl(MSControl b, State st);
+	void SetMSControl(uint8_t b, State st);
 
 	/*
 	 03h, 04h R - Button Status Registers
@@ -205,7 +225,7 @@ private:
 protected:
 	void UpdateCS(uint8_t *status1 = 0, uint8_t *status2 = 0);
 	uint16_t GetCS() const;
-	State GetCS(CS b) const;
+	State GetCS(uint16_t b) const;
 
 	/*
 	 0Fh R-C - Group Status Registers

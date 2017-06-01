@@ -44,7 +44,7 @@ void SessamiController::Background() {
 void SessamiController::Normal() {
   switch (state) {
     case 0 : 
-      if (*button == ButtonEnum::PROX) {
+      if (*button == B_PROX) {
         led->SetDutyCycle(B1111, B110);
         state = 1;
         ui_rst = true;
@@ -65,7 +65,7 @@ void SessamiController::Normal() {
 void SessamiController::Mode() {
   button->UpdateBut();
 
-   if ( (*button == ButtonEnum::LEFT) && (*button == ButtonEnum::UP) ) {
+   if ( (*button == B_LEFT) && (*button == B_UP) ) {
     engg_mode = !engg_mode; // engineering mode
     state = 0;
     ui_rst = true;
@@ -90,11 +90,11 @@ void SessamiController::ENGG() {
        if ( (*button == B_UP) && (*button == B_DOWN) ) {
         state = 1;
         ui_rst = true;
-      } else if ( (*button == ButtonEnum::LEFT) && (*button == ButtonEnum::POWER ) ) {
+      } else if ( (*button == B_LEFT) && (*button == B_POWER ) ) {
         state = 2;
         last_state = 0;
         ui_rst = true;
-      }  else if ( (*button == ButtonEnum::LEFT) && (*button == ButtonEnum::RIGHT ) ) {
+      }  else if ( (*button == B_LEFT) && (*button == B_RIGHT ) ) {
         state = 3;
         ui_rst = true;
       }
@@ -103,11 +103,11 @@ void SessamiController::ENGG() {
       if ( (*button == B_UP) && (*button == B_DOWN) ) {
         state = 0;
         ui_rst = true;
-      } else if ( (*button == ButtonEnum::LEFT) && (*button == ButtonEnum::POWER ) ) {
+      } else if ( (*button == B_LEFT) && (*button == B_POWER ) ) {
         state = 2;
         last_state = 1;
         ui_rst = true;
-      } else if ( (*button == ButtonEnum::LEFT) && (*button == ButtonEnum::RIGHT ) ) {
+      } else if ( (*button == B_LEFT) && (*button == B_RIGHT ) ) {
         state = 3;
         ui_rst = true;
       }
@@ -119,20 +119,20 @@ void SessamiController::ENGG() {
       }
       break;
     case 3 :
-      if ( (*button == ButtonEnum::LEFT) && (*button == ButtonEnum::RIGHT ) ) {
+      if ( (*button == B_LEFT) && (*button == B_RIGHT ) ) {
         state = 4;
         ui_rst = true;
-      } else if ( (*button == ButtonEnum::LEFT) && (*button == ButtonEnum::POWER ) ) {
+      } else if ( (*button == B_LEFT) && (*button == B_POWER ) ) {
         state = 2;
         last_state = 3;
         ui_rst = true;
       }
       break;
     case 4 :
-      if ( (*button == ButtonEnum::LEFT) && (*button == ButtonEnum::RIGHT ) ) {
+      if ( (*button == B_LEFT) && (*button == B_RIGHT ) ) {
         state = 0;
         ui_rst = true;
-      } else if ( (*button == ButtonEnum::LEFT) && (*button == ButtonEnum::POWER ) ) {
+      } else if ( (*button == B_LEFT) && (*button == B_POWER ) ) {
         state = 2;
         last_state = 4;
         ui_rst = true;
