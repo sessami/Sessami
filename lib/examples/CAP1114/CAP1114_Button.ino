@@ -27,30 +27,14 @@ void Sessami_Button::UpdateBut() {
   uint16_t cs = 0;
   uint8_t ss = 0, ssB01 = 0, ssB56 = 0, ssB23 = 0;
 
-  UpdateSlide(&debug);
+  UpdateSlide();
   ss = GetSlide();
-  /*if (debug > 0) {
-    Serial.print("Update SS: ");
-    Serial.println(debug, 2);
-  }
-  if (ss > 0) {
-    Serial.print("Get SS: ");
-    Serial.println(ss, 2);
-  }*/
 
-  UpdateCS(&debug, &debug2);
+  UpdateCS();
   cs = GetCS();
-  //Serial.print("Update CS: ");
-  //Serial.print(debug2, 2);
-  //Serial.print("   ");
-  //Serial.println(debug, 2);
-  //Serial.print("Get CS: ");
-  //Serial.println(cs, 2);
 
   button_state = (uint8_t)(cs & B00111111);
   button_state |= (uint8_t)((cs >> 2) & B01000000);
-  //Serial.print("Get BS: ");
-  //Serial.println(button_state, 2);
   slide_state = ( (uint8_t)(cs & B11000000) ) >> 6;
 
   ssB01 = (ss & B00000011);
@@ -67,10 +51,6 @@ void Sessami_Button::UpdateBut() {
     Serial.println("Exit the reset state");
   if (ssB56 & 2)
     Serial.println("Touches Blocked");
-  /*if (slide_state > 0) {
-    Serial.print("Get S_S: ");
-    Serial.println(slide_state, 2);
-  }*/
   
 
   if (button_state > 1)
@@ -83,15 +63,9 @@ void Sessami_Button::UpdateBut() {
   if ((button_state <= 1) && (slide_state == 0))
     button_hold_t = 0;
 
-  UpdateMSControl(&debug);
-  /*Serial.print("Update MS: ");
-  Serial.println(debug, 2);*/
-  if (debug = GetMSControl(MSControl_INT))
+  UpdateMSControl();
+  if (GetMSControl(MSControl_INT))
     SetMSControl(MSControl_INT, LO);
-  /*Serial.print("Get MS: ");
-  Serial.println(debug, 2);*/
-
-  //Serial.println();
 }
 
 uint8_t Sessami_Button::GetBut() {

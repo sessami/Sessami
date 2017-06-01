@@ -21,9 +21,14 @@ uint8_t CAP1114_Driver::st_00 = 0, CAP1114_Driver::st_03 = 0,
 
 
 bool CAP1114_Driver::initWireI2C() {
-	if ((ReadRegister(CAP1114_PRODID) != 0x3A)
-			|| (ReadRegister(CAP1114_MANUID) != 0x5D)
-			|| (ReadRegister(CAP1114_REV) != 0x10))
+	uint8_t pro_id, manu_id, rev;
+	
+	ReadRegister(CAP1114_PRODID);
+	
+	pro_id = ReadRegister(CAP1114_PRODID);Serial.print("Prod ID");Serial.println(pro_id);
+	manu_id = ReadRegister(CAP1114_MANUID);Serial.print("MANU ID");Serial.println(manu_id);
+	rev = ReadRegister(CAP1114_REV);Serial.print("REV");Serial.println(rev);
+	if ((pro_id != 0x3A) || (manu_id != 0x5D) || (rev != 0x10))
 		return false;
 
 	UpdateMSControl();

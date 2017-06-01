@@ -29,17 +29,17 @@ using namespace CAP1114;
 
 class Sessami_Button: private CAP1114_Driver {
   private:
-    uint8_t button_state;
-    uint8_t slide_state;
-    unsigned long held_t;
-    unsigned long button_hold_t;
-    unsigned int button_tap;
-    bool slide_tap;
-    bool slide_ph;
-    uint8_t delta_sen;
-    uint8_t prox_sen;
-    uint8_t threshold[8];
-    int8_t delta_count[8];
+    static uint8_t button_state;
+    static uint8_t slide_state;
+    static unsigned long held_t;
+    static unsigned long button_hold_t;
+    static unsigned int button_tap;
+    static bool slide_tap;
+    static bool slide_ph;
+    static uint8_t delta_sen;
+    static uint8_t prox_sen;
+    static uint8_t threshold[8];
+    static int8_t delta_count[8];
   public:
     Sessami_Button();
     ~Sessami_Button();
@@ -68,9 +68,19 @@ class Sessami_Button: private CAP1114_Driver {
     uint8_t Getthreshold(uint8_t key); //tmp
 };
 
-Sessami_Button::Sessami_Button() : CAP1114_Driver(), 
-    button_state(0),slide_state(0), held_t(0), button_hold_t(0), button_tap(0),
-    slide_tap(0), slide_ph(0) {
+uint8_t Sessami_Button::button_state = 0;
+uint8_t Sessami_Button::slide_state = 0;
+unsigned long Sessami_Button::held_t = 0;
+unsigned long Sessami_Button::button_hold_t = 0;
+unsigned int Sessami_Button::button_tap = 0;
+bool Sessami_Button::slide_tap = 0;
+bool Sessami_Button::slide_ph = 0;
+uint8_t Sessami_Button::delta_sen;
+uint8_t Sessami_Button::prox_sen;
+uint8_t Sessami_Button::threshold[8];
+int8_t Sessami_Button::delta_count[8];
+
+Sessami_Button::Sessami_Button() : CAP1114_Driver()  {
 #if defined(ESP8266)
   Serial.println("I2C Max Speed");
 #endif
@@ -80,12 +90,15 @@ Sessami_Button::Sessami_Button() : CAP1114_Driver(),
     Serial.println("CAP1114 communication fail!");
   else {
     //-----------------------Sessami Setting-----------------------------
+    //Set LED and Touch IO
     SetGPIODir(B01111111);
     SetOutputType(B01110000);
+    
     SetMTConfig(0); //Multi Touch
     SetCalAct(0xFF); //Calibrate all Sensor
 
-    SetProxSen(4); //Set Sensivity  0-most, 7-least
+    SetProxEN(HI); //On Proximity
+    SetProxSen(4); //B7=1 measure Proximity, Last 3bits Set Sensivity  0-most, 7-least
    /* SetDeltaSen(4);
     Serial.print("Delta Sensitivity : ");
     Serial.println(GetDeltaSen());*/
@@ -111,14 +124,13 @@ Sessami_Button::Sessami_Button() : CAP1114_Driver(),
     Serial.print("   ");
     Serial.print(max_dur, 2);
     Serial.print("   ");
-    Serial.println(rpt_sl, 2);*/
+    Serial.println(rpt_sl, 2);
 
-    /*SetAccelEN(HI);
-    SetProxEN(HI); //On Proximity*/
+    SetAccelEN(HI);*/
+
 
     Serial.println("---------CAP1114 initialization End-----------");
     Serial.println();
-    //SetMSControl(MSControl::INT, LO);
   }
 }
 
