@@ -10,13 +10,15 @@
 using namespace CAP1114;
 
 bool Sessami_Button::operator==(const unsigned int key) const {
-  if (key < 256) {
-    if ( (((unsigned int)button_state & key) > 0) && (button_tap == 1) )
+  if ((key == B_PROX) && ((button_state & key) > 0) ) //For Proximity
+    return true;
+  else if (key < 256) {
+    if ( (((unsigned int)button_state & key) > 0) && (button_tap == 1) ) // For Button
       return true;
-    else if ( (((unsigned int)button_state & key) > 0) && (button_tap > 1) && (button_hold_t > 2) )
+    else if ( (((unsigned int)button_state & key) > 0) && (button_tap > 1) && (button_hold_t > 2) ) // For Button Press and Hold
       return true;
   } else {
-    if ( (unsigned int)slide_state & ( key - 256 ) > 0)
+    if ( (unsigned int)slide_state & ( key - 256 ) > 0) // For slide
       return true;
   }
 
@@ -25,17 +27,21 @@ bool Sessami_Button::operator==(const unsigned int key) const {
 
 void Sessami_Button::UpdateBut() {
   uint16_t cs = 0;
-  uint8_t ss = 0, ssB01 = 0, ssB56 = 0, ssB23 = 0;
+  uint8_t ss = 0, ssB01 = 0, ssB56 = 0, ssB23 = 0, debug;
 
   UpdateSlide();
   ss = GetSlide();
 
-  UpdateCS();
+  UpdateCS(&debug);
   cs = GetCS();
+  Serial.println(debug);
 
   button_state = (uint8_t)(cs & B00111111);
   button_state |= (uint8_t)((cs >> 2) & B01000000);
   slide_state = ( (uint8_t)(cs & B11000000) ) >> 6;
+
+  //Serial.println(button_state);
+  //Serial.println(slide_state);
 
   ssB01 = (ss & B00000011);
   if ((ssB01 & 1)>0)
@@ -99,12 +105,15 @@ bool Sessami_Button::BuTap() {
 
 
 void Sessami_Button::SetPROXSen(uint8_t value) {
-  prox_sen = value;
   SetProxSen(value);
 }
 
 uint8_t Sessami_Button::GetPROXSen() {
-  return prox_sen;
+  return GetProxSen();
+}
+
+bool Sessami_Button::GetPROXEn() {
+  return GetProxEN();
 }
 
 void Sessami_Button::SetButSen(uint8_t value) {

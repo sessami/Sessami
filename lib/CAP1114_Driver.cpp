@@ -352,16 +352,16 @@ void CAP1114_Driver::SetProxSum(State st) {
 }
 void CAP1114_Driver::SetProxAvg(uint8_t value) {
 	if ((value >= 0) && (value <= 3)) {
-		uint8_t tmp = st_42 | B11000;
-		tmp = tmp & (value << 3);
+		uint8_t tmp = st_42 & B11100111;
+		tmp = tmp | (value << 3);
 		WriteRegister(CAP1114_PROXIMITYCTRL, tmp);
 		st_42 = tmp;
 	}
 }
 void CAP1114_Driver::SetProxSen(uint8_t value) {
 	if ((value >= 0) && (value <= 7)) {
-		uint8_t tmp = st_42 | B111;
-		tmp = tmp & value;
+		uint8_t tmp = st_42 & B11111000;
+		tmp = tmp | value;
 		WriteRegister(CAP1114_PROXIMITYCTRL, tmp);
 		st_42 = tmp;
 	}

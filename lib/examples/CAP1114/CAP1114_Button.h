@@ -22,10 +22,10 @@ using namespace CAP1114;
 
 //#define S_PH 257 //256 + 1  change to bool
 //#define S_TAP 258 //256 + 2  change to bool
-#define S_RIGHT 260 //256 +1
-#define S_LEFT 264 //256 + 2
-#define S_RESET 288 //256+32
-#define S_MULT 320 //256+64
+#define S_RIGHT 257 //256 +1
+#define S_LEFT 258 //256 + 2
+//#define S_RESET 288 //256+32
+//#define S_MULT 320 //256+64
 
 class Sessami_Button: private CAP1114_Driver {
   private:
@@ -37,7 +37,6 @@ class Sessami_Button: private CAP1114_Driver {
     static bool slide_tap;
     static bool slide_ph;
     static uint8_t delta_sen;
-    static uint8_t prox_sen;
     static uint8_t threshold[8];
     static int8_t delta_count[8];
   public:
@@ -57,6 +56,7 @@ class Sessami_Button: private CAP1114_Driver {
     //42h Prox Sensitivity
     void SetPROXSen(uint8_t value);
     uint8_t GetPROXSen();
+    bool GetPROXEn();
     //1Fh Data Sensitivity
     void SetButSen(uint8_t value);
     uint8_t GetButSen();
@@ -76,7 +76,6 @@ unsigned int Sessami_Button::button_tap = 0;
 bool Sessami_Button::slide_tap = 0;
 bool Sessami_Button::slide_ph = 0;
 uint8_t Sessami_Button::delta_sen;
-uint8_t Sessami_Button::prox_sen;
 uint8_t Sessami_Button::threshold[8];
 int8_t Sessami_Button::delta_count[8];
 
@@ -98,7 +97,7 @@ Sessami_Button::Sessami_Button() : CAP1114_Driver()  {
     SetCalAct(0xFF); //Calibrate all Sensor
 
     SetProxEN(HI); //On Proximity
-    SetProxSen(4); //B7=1 measure Proximity, Last 3bits Set Sensivity  0-most, 7-least
+    SetProxSen(0); //Set Sensivity  0-most, 7-least
    /* SetDeltaSen(4);
     Serial.print("Delta Sensitivity : ");
     Serial.println(GetDeltaSen());*/

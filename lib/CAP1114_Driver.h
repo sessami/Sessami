@@ -39,24 +39,6 @@ enum class LED {
 	LED10 = HB | B1,
 	LED11 = HB | B2,
 };
-enum class CS {
-	CS1 = B0,
-	CS2 = B1,
-	CS3 = B2,
-	CS4 = B3,
-	CS5 = B4,
-	CS6 = B5,
-	DOWN = B6,
-	UP = B7,
-	CS7 = HB | B0,
-	CS8 = HB | B1,
-	CS9 = HB | B2,
-	CS10 = HB | B3,
-	CS11 = HB | B4,
-	CS12 = HB | B5,
-	CS13 = HB | B6,
-	CS14 = HB | B7
-};
 
 #define CS_1		1
 #define CS_2		2

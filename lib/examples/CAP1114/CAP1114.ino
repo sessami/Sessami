@@ -50,6 +50,8 @@ void Background() {
 }
 
 void ButTest() {
+  if (*button == B_PROX)
+    Serial.println("PROX");
   if (*button == B_UP)
     Serial.println("UP");
   if (*button == B_DOWN)
@@ -72,10 +74,16 @@ void ButTest() {
 void ReadTest() {
   //Main Status Control Register
   Serial.print("Main Status Control: ");
-  //Serial.println(button->GetMSControl());
+  Serial.println();
+
+  //Proximity Control Register
+  Serial.print("Proximity Control: ");
+  Serial.print(button->GetPROXEn());
+  Serial.print(" ");
+  Serial.println(button->GetPROXSen());
 
   //Slider Position / Volumetric Data Register
   Serial.print("Slider Position / Volumetric Data Register: ");
-  //Serial.println(button->GetSliPos());
+  Serial.println();
 }
 
