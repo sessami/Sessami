@@ -16,7 +16,7 @@
 #include <OpenWeather_ESP8266.h>
 #include <WifiManage.h>
 #include <Si7020.h>
-#include "CAP1114_Button.h"
+#include <CAP1114_Button.h>
 #include "CAP1114_LED.h"
 
 #include "SessamiUI.h"

@@ -6,7 +6,6 @@
  ***************************************************************************************/
 
 #include "SessamiController.h"
-#include "CAP1114_Button.h"
 #include "CAP1114_LED.h"
 
 void SessamiController::Interrupt() {

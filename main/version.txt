@@ -1,3 +1,18 @@
+v0.1.0
+WORKING:
+CHANGED:
+	Put CAP1114_Button to lib
+PENDING:
+	Button, LED - Use static variable to save register value
+	Button, LED - add init function to Get and Set the default static register value
+	Update Page_Normal to parent class. menu page as child class
+	Add LED Class
+	Replace TouchController class by Button class
+BUG:
+	[Reason Unknown]Button and slider react delay
+	Standby page - Time update after switch to HelloWorld page
+	ButtonSen - Prox Threshold vale freeze
+
 v0.0.3
 WORKING:
 CHANGED:

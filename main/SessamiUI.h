@@ -14,7 +14,7 @@
 #include <string>
 
 typedef String string;
-#include "CAP1114_Button.h"
+#include <CAP1114_Button.h>
 #include <Fonts.h>
 
 // For the Adafruit shield, these are the default.

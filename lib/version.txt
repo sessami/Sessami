@@ -1,3 +1,21 @@
+v2.3.0
+WORKING:
+	CAP1114 Driver - Replace Enums by define
+	Done:
+		MSControl
+		CS
+		Threshold
+	CAP1114 Driver - Use static varible for decrease I2C Write Bit.
+CHANGED:
+	Replace Enums by define in CS and
+	Fixed bug of reading Proximity and Slider
+	Put CAP1114_Button to lib, delete in main
+PENDING:
+	Modify I2CSensor - change functions to protected and virual, 
+						and BlockRead, BlockWrite, WriteBit.
+BUG:
+	OpenWeather - ArduinoJson phasing float to int, int to float.
+
 v2.2.5
 WORKING:
 CHANGED:
