@@ -18,7 +18,7 @@ bool Sessami_Button::operator==(const unsigned int key) const {
     else if ( (((unsigned int)button_state & key) > 0) && (button_tap > 1) && (button_hold_t > 2) ) // For Button Press and Hold
       return true;
   } else {
-    if ( (unsigned int)slide_state & ( key - 256 ) > 0) // For slide
+    if (slide_state == ( key - 256 )) // For slide
       return true;
   }
 
@@ -32,16 +32,12 @@ void Sessami_Button::UpdateBut() {
   UpdateSlide();
   ss = GetSlide();
 
-  UpdateCS(&debug);
+  UpdateCS();
   cs = GetCS();
-  Serial.println(debug);
 
   button_state = (uint8_t)(cs & B00111111);
   button_state |= (uint8_t)((cs >> 2) & B01000000);
-  slide_state = ( (uint8_t)(cs & B11000000) ) >> 6;
-
-  //Serial.println(button_state);
-  //Serial.println(slide_state);
+  slide_state = ( (uint8_t)(ss & B1100) ) >> 2;
 
   ssB01 = (ss & B00000011);
   if ((ssB01 & 1)>0)

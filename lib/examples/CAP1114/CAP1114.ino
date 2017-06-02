@@ -50,8 +50,8 @@ void Background() {
 }
 
 void ButTest() {
-  if (*button == B_PROX)
-    Serial.println("PROX");
+  //if (*button == B_PROX)
+    //Serial.println("PROX");
   if (*button == B_UP)
     Serial.println("UP");
   if (*button == B_DOWN)

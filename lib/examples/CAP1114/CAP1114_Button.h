@@ -97,8 +97,8 @@ Sessami_Button::Sessami_Button() : CAP1114_Driver()  {
     SetCalAct(0xFF); //Calibrate all Sensor
 
     SetProxEN(HI); //On Proximity
-    SetProxSen(0); //Set Sensivity  0-most, 7-least
-   /* SetDeltaSen(4);
+    SetProxSen(4); //Set Sensivity  0-most, 7-least
+    /*SetDeltaSen(4);
     Serial.print("Delta Sensitivity : ");
     Serial.println(GetDeltaSen());*/
 
