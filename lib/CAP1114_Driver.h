@@ -11,6 +11,10 @@
 #include "I2CSensor.h"
 #include "CAP1114_Registers.h"
 
+#ifndef HBMASK
+#define HBMASK 0xFF
+#endif
+
 namespace CAP1114 {
 
 #define SLIPOS_CS8  0x02
@@ -61,23 +65,6 @@ enum class Slide {
 	PH = B0, TAP = B1, DOWN = B2, UP = B3, RESET = B5, MULT = B6, LID = B7
 };
 
-enum class SDelta {
-	CS1 = 0x10,
-	CS2 = 0x11,
-	CS3 = 0x12,
-	CS4 = 0x13,
-	CS5 = 0x14,
-	CS6 = 0x15,
-	CS7 = 0x16,
-	CS8 = 0x17,
-	CS9 = 0x18,
-	CS10 = 0x19,
-	CS11 = 0x1A,
-	CS12 = 0x1B,
-	CS13 = 0x1C,
-	CS14 = 0x1D
-};
-
 #define	SDelta_CS1	0x10
 #define	SDelta_CS2	0x11
 #define	SDelta_CS3	0x12
@@ -104,24 +91,22 @@ enum class LEDLinking {
 	Group = B7
 };
 
-enum class IntEn {
-	S1 = B0,
-	S2 = B1,
-	S3 = B2,
-	S4 = B3,
-	S5 = B4,
-	S6 = B5,
-	S7 = B6,
-	G = B7,
-	GPIO1 = HB | B0,
-	GPIO2 = HB | B1,
-	GPIO3 = HB | B2,
-	GPIO4 = HB | B3,
-	GPIO5 = HB | B4,
-	GPIO6 = HB | B5,
-	GPIO7 = HB | B6,
-	GPIO8 = HB | B7
-};
+#define IntEnS1		1
+#define IntEnS2		2
+#define IntEnS3		4
+#define IntEnS4		8
+#define IntEnS5		16
+#define IntEnS6		32
+#define IntEnS7		64
+#define IntEnG		128
+#define IntEnGPIO1	257
+#define IntEnGPIO2	258
+#define IntEnGPIO3	260
+#define IntEnGPIO4	264
+#define IntEnGPIO5	272
+#define IntEnGPIO6	288
+#define IntEnGPIO7	320
+#define IntEnGPIO8	384
 
 enum class GPIODir {
 	LED1_DIR = B0,
@@ -134,7 +119,7 @@ enum class GPIODir {
 	LED8_DIR = B7
 };
 
-#define	LEDBhv1		B0
+#define	LEDBhv1		1
 #define	LEDBhv2		B2
 #define	LEDBhv3		B4
 #define	LEDBhv4		B6
@@ -147,7 +132,7 @@ enum class GPIODir {
 #define	LEDBhv11_C	(0x200 | B4)
 #define	LEDBhv11_A	(0x200 | B6)
 
-#define	P1MIN	B0
+#define	P1MIN	1
 #define	P1MAX	B4
 #define	P2MIN	(0x100 | B0)
 #define	P2MAX	(0x100 | B4)
@@ -251,7 +236,6 @@ protected:
 	 1Dh   CS14 Slide 1
 	 */
 protected:
-	uint8_t GetSDelta(SDelta b);
 	uint8_t GetSDelta(int8_t b);
 	
 	/*
@@ -305,9 +289,9 @@ private:
 protected:
 	void UpdateIntEn(uint8_t *status1 = 0, uint8_t *status2 = 0);
 	uint16_t GetIntEn() const;
-	State GetIntEn(IntEn b) const;
+	State GetIntEn(uint8_t b) const;
 	void SetIntEn(uint8_t value);
-	void SetIntEn(IntEn b, State st);
+	void SetIntEn(uint8_t b, State st);
 
 	/*
 	 26h, 46h RW - Calibration Activate Registers

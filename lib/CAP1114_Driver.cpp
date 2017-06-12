@@ -143,9 +143,6 @@ uint8_t CAP1114_Driver::SetVolData(uint8_t vol) {
 }
 
 //Sensor Delta Count Register
-uint8_t CAP1114_Driver::GetSDelta(SDelta b) {
-	return (ReadRegister((uint8_t) b));
-}
 uint8_t CAP1114_Driver::GetSDelta(int8_t b) {
 	if ( (b>=0x10) && (b<=0x1D) )
 		return (ReadRegister(b));
@@ -251,10 +248,10 @@ uint16_t CAP1114_Driver::GetIntEn() const {
 	return ((st_28 << 8) | st_27);
 }
 
-State CAP1114_Driver::GetIntEn(IntEn b) const {
-	if ((uint8_t) b <= 0xFF)
-		return (st_27 & (uint8_t) b);
-	return st_28 & ((uint8_t) b & HBMASK);
+State CAP1114_Driver::GetIntEn(uint8_t b) const {
+	if (b <= 0xFF)
+		return (st_27 & b);
+	return st_28 & (b - HBMASK);
 }
 void CAP1114_Driver::SetIntEn(uint8_t value) {
 	if (value <= 0xFF) {
@@ -265,11 +262,11 @@ void CAP1114_Driver::SetIntEn(uint8_t value) {
 		st_28 = ReadRegister(CAP1114_INT_ENABLE_REG2);
 	}
 }
-void CAP1114_Driver::SetIntEn(IntEn b, State st) {
-	if ((uint8_t) b <= 0xFF) {
-		WriteRegBit(CAP1114_INT_ENABLE_REG1, (uint8_t) b, st, &st_27);
+void CAP1114_Driver::SetIntEn(uint8_t b, State st) {
+	if (b <= 0xFF) {
+		WriteRegBit(CAP1114_INT_ENABLE_REG1, b, st, &st_27);
 	} else {
-		WriteRegBit(CAP1114_INT_ENABLE_REG2, ((uint8_t) b & HBMASK), st, &st_28);
+		WriteRegBit(CAP1114_INT_ENABLE_REG2, (b - HBMASK), st, &st_28);
 	}
 }
 
